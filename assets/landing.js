@@ -2,41 +2,33 @@
 let isMobile = false;
 let col = 9;
 
-if(innerWidth < 800){
-    isMobile = true;
+if(innerWidth < innerHeight){
+    isMobile = false;
     col = 5;
 }
 
 
 const main = document.querySelectorAll("main")[0];
+const mainWidth = innerWidth - getScrollbarWidth();
 
-// console.log(main);
-let land = {
-    1:  {
-        type : "img",
-        content : "https://imgr.search.brave.com/ICyGN86VWoz3lOlCu8d61AZzTKkK5fNU9sNXJ-Pf6_Y/fit/583/700/ce/1/aHR0cHM6Ly93YWhv/b2FydC5jb20vQXJ0/Lm5zZi9PLzhYWTRE/Si8kRmlsZS9HZW9y/Z2lhLU9fa2VlZmZl/LUxlYXZlcy1vZi1h/LVBsYW50LkpQRw"
-    },
-    2:  {
-        type : "img",
-        content : "https://imgr.search.brave.com/ICyGN86VWoz3lOlCu8d61AZzTKkK5fNU9sNXJ-Pf6_Y/fit/583/700/ce/1/aHR0cHM6Ly93YWhv/b2FydC5jb20vQXJ0/Lm5zZi9PLzhYWTRE/Si8kRmlsZS9HZW9y/Z2lhLU9fa2VlZmZl/LUxlYXZlcy1vZi1h/LVBsYW50LkpQRw"
-    }
-}
+
 const img = document.querySelectorAll("img");
 const a = [];
 let preContent = [];
 function init(){
 
-for(let i = 0 ; i < col*6; i++){
+for(let i = 0 ; i < col*24; i++){
     
     preContent[i] = document.createElement("div");
     preContent[i].classList.toggle("placeholder");
+    preContent[i].classList.toggle("unhovered");
     if(isMobile){
-    preContent[i].style.width = innerWidth/5 + "px";
-    preContent[i].style.height = innerWidth/5 + "px";
+    preContent[i].style.width = mainWidth/5 + "px";
+    preContent[i].style.height = mainWidth/5 + "px";
     }
     else{
-        preContent[i].style.width = innerWidth/9 + "px";
-        preContent[i].style.height = innerWidth/9 + "px";
+        preContent[i].style.width = mainWidth/9 + "px";
+        preContent[i].style.height = mainWidth/9 + "px";
     }
 
 
@@ -46,24 +38,18 @@ for(let i = 0 ; i < col*6; i++){
     // }
 
 
-    document.body.insertBefore(preContent[i],main);
-    preContent[i].addEventListener("mouseenter", function( event ) {
-        // on met l'accent sur la cible de mouseenter
-        event.target.classList.toggle("hovered");
-        // console.log(event.target.classList);  
-        // on réinitialise la couleur après quelques instants
-       
-      }, false);
+    main.insertBefore(preContent[i], img[0]);
+    
 }
 
 for(let i = 0; i < img.length; i++){
-    let coeff = 1+Math.round(Math.random()*3);
+    let coeff = 2+Math.round(Math.random()*3);
     if(isMobile){
-    img[i].style.width = innerWidth/5 * coeff + "px";
+    img[i].style.width = mainWidth/5 * coeff + "px";
     // img[i].style.height = "calc(100vw / 5.09 * " + coeff + ")";
     }
     else {
-        img[i].style.width = innerWidth/9 * coeff + "px";
+        img[i].style.width = mainWidth/9 * coeff + "px";
         // img[i].style.height = "calc(100vw / 9.09 * " + coeff + ")";
         
     }
@@ -91,7 +77,48 @@ for(let i = 0; i < img.length; i++){
        
       }, false);
 }
-document.body.style.backgroundSize = "calc(" + innerWidth + "px / 9) calc(" + innerWidth + "px / 9)";
+if(isMobile){
+
+document.body.style.backgroundSize = "calc(" + mainWidth + "px / 5) calc(" + mainWidth + "px / 5)";
+}
+else{
+document.body.style.backgroundSize = "calc(" + mainWidth + "px / 9) calc(" + mainWidth + "px / 9)";
+}
 console.log(document.body.style.backgroundSize);
+
+
+
+const elements = document.querySelectorAll('.placeholder');
+elements.forEach(element => {
+    element.addEventListener('click', (e)=>{
+        console.log(e);
+        element.classList.toggle("hovered");
+        element.classList.toggle("unhovered");
+    });
+ });
 }
 init();
+
+
+function getScrollbarWidth() {
+
+  // Creating invisible container
+  const outer = document.createElement('div');
+  outer.style.visibility = 'hidden';
+  outer.style.overflow = 'scroll'; // forcing scrollbar to appear
+  outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
+  document.body.appendChild(outer);
+
+  // Creating inner element and placing it in the container
+  const inner = document.createElement('div');
+  outer.appendChild(inner);
+
+  // Calculating difference between container's full width and the child width
+  const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
+
+  // Removing temporary elements from the DOM
+  outer.parentNode.removeChild(outer);
+
+  return scrollbarWidth;
+
+}

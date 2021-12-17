@@ -6,22 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="assets/main.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="HandheldFriendly" content="true">
 
 </head>
 <body>
+    {% include base.html %}
+
     <main>
+        
     {{ content }}
    
 
     {% for image in site.static_files %}
-  {% if image.path contains 'assets/img' %}
-    <img src="{{ image.path }}" alt="">
+  {% if image.path contains '/assets/img' %}
+    <img src="{{ base }}{{ image.path }}" alt="">
   {% endif %}
 {% endfor %}
+
+</main>
 <nav>
     <p id="MI">multiple-identities</p>
+    <p id="reset" onclick="reset()">reset</p>
 </nav>
-</main>
     <script  src="assets/landing.js" defer></script>
     
 </body>
